@@ -1,0 +1,16 @@
+{
+  "model": "LinearRegression",
+  "feature": "Experience Years",
+  "target": "Salary",
+  "n_rows": 200,
+  "test_r2": 0.9831368268457784,
+  "test_mae": 4056.343861389738,
+  "test_rmse": 4872.954366174452,
+  "cv_r2_mean": 0.979593171410138,
+  "cv_r2_std": 0.004558373520491681,
+  "coef": 9468.507165060115,
+  "intercept": 25640.749625913013,
+  "min_experience": 0.6,
+  "max_experience": 14.8,
+  "sklearn_version": "1.8.0"
+}
