@@ -1,142 +1,156 @@
-\# Salary Prediction App
+# Salary Prediction App
 
+An end-to-end machine learning project that predicts **salary from years of experience** using a regression model, deployed through an interactive **Streamlit** web application.
 
+**Live Demo:** [Salary Prediction App](https://salary-predictor-app-demo.streamlit.app)
 
-An end-to-end machine learning project: a regression model that predicts \*\*salary from years of experience\*\*, served through an interactive \*\*Streamlit\*\* web app.
+## App Screenshots
 
+### Salary Prediction
+![App Prediction](screenshots/app-prediction.png)
 
+### Prediction History
+![Prediction History](screenshots/app-prediction-history.png)
 
-\*\* Live app:\*\* \[https://salary-predictor-app-demo.streamlit.app](https://salary-predictor-app-demo.streamlit.app)
+### Dataset
+![Dataset Tab](screenshots/app-dataset.png)
 
+### Model Performance
+![Model Performance Tab](screenshots/app-model-performance.png)
 
+---
 
-!\[App prediction](screenshots/app-prediction.png)
+## Project Description
 
-!\[Prediction history](screenshots/app-prediction-history.png)
+The app allows users to enter their years of experience and receive a predicted salary. It also provides:
 
-!\[Dataset tab](screenshots/app-dataset.png)
+- A preview of the dataset.
+- Model performance metrics.
+- A visualization of the prediction on the fitted regression line.
+- A history of predictions made during the current session.
 
-!\[Model performance tab](screenshots/app-model-performance.png)
+The model is trained separately in a Jupyter Notebook and saved using `joblib`. The Streamlit application loads the saved model rather than retraining it every time the app runs.
 
+## Dataset
 
+- **File:** `data/salary_dataset.csv`
+- **Size:** 200 records and 2 columns.
+- **Features:** `Experience Years` and `Salary`.
+- **Source:** Salary dataset provided in class (GitHub).
+- **Data quality:** No missing values or duplicate records.
+- **Currency:** The dataset does not specify a salary currency, so values are displayed in the dataset's original units.
 
-\## Project description
+## Model
 
-The app lets a user enter their years of experience and returns a predicted salary. It also shows the dataset, the model's performance metrics, a chart of the prediction on the fitted line, and a history of predictions made in the session. The model is trained once in a notebook, saved with `joblib`, and \*\*loaded (not retrained)\*\* by the app.
+- **Algorithm:** Linear Regression using scikit-learn.
+- **Feature:** `Experience Years`
+- **Target:** `Salary`
+- **Model selection:** Polynomial regression models of degrees 2 and 3 were compared but did not provide meaningful improvement. Therefore, the simpler and more interpretable linear regression model was selected.
+- **Validation:** An 80/20 train-test split using `random_state=42`, along with shuffled 5-fold cross-validation.
+- **Final model:** Refit on all 200 records and saved to `model/model.pkl`.
 
+Shuffling is used during cross-validation because the dataset is sorted by experience. Without shuffling, the folds could produce misleading evaluation results.
 
-
-\## Dataset
-
-\- \*\*File:\*\* `data/salary\_dataset.csv`, 200 records, 2 columns (`Experience Years`, `Salary`).
-
-\- \*\*Source:\*\* Salary dataset provided in class (GitHub).
-
-\- \*\*Quality:\*\* no missing values or duplicates. The salary currency is not specified in the dataset, so values are shown in the dataset's own units.
-
-
-
-\## Model
-
-\- \*\*Algorithm:\*\* Linear Regression (scikit-learn). Polynomial models (degree 2 and 3) were compared and gave no meaningful improvement, so the simpler, more interpretable model was kept.
-
-\- \*\*Features / target:\*\* `Experience Years` → `Salary`.
-
-\- \*\*Validation:\*\* 80/20 train/test split (`random\_state=42`) plus 5-fold \*\*shuffled\*\* cross-validation. The file is sorted by experience, so unshuffled folds would give misleading scores.
-
-\- \*\*Final model:\*\* refit on all 200 rows and saved to `model/model.pkl`.
-
-
-
-\## Evaluation metrics
+## Evaluation Metrics
 
 | Metric | Value |
+|---|---:|
+| Test-set R² | 0.983 |
+| Test-set MAE | 4,056 |
+| Test-set RMSE | 4,873 |
+| 5-fold shuffled CV R² (mean ± SD) | 0.980 ± 0.005 |
 
-|---|---|
+**Fitted regression equation:**
 
-| R² (test set) | 0.983 |
-
-| MAE (test set) | 4,056 |
-
-| RMSE (test set) | 4,873 |
-
-| R² (5-fold shuffled CV, mean ± SD) | 0.980 ± 0.005 |
-
-
-
-Fitted equation: `salary ≈ 25,641 + 9,469 × years of experience`.
-
-
-
-\*\*Limitation:\*\* experience is the only feature, and predictions are reliable only within the training range (0.6 to 14.8 years). The app warns when the input is outside that range.
-
-
-
-\## Project structure
-
+```text
+salary ≈ 25,641 + 9,469 × years of experience
 ```
 
-ML\_Project/
+### Limitations
 
-├── data/salary\_dataset.csv
+- The model uses years of experience as its only input feature.
+- Predictions are most reliable within the training data's experience range of **0.6 to 14.8 years**.
+- Predictions outside this range involve extrapolation, so the app warns users when their input falls outside the training range.
+- Salary currency is unspecified in the dataset.
 
+## Project Structure
+
+```text
+ML_Project/
+├── data/
+│   └── salary_dataset.csv
 ├── model/
-
-│   ├── model.pkl            # serialized model (joblib)
-
-│   └── metrics.json         # evaluation metrics shown in the app
-
-├── notebooks/model\_training.ipynb
-
-├── screenshots/             # screenshots of the deployed app
-
-├── app.py                   # Streamlit application
-
+│   ├── model.pkl
+│   └── metrics.json
+├── notebooks/
+│   └── model_training.ipynb
+├── screenshots/
+│   ├── app-prediction.png
+│   ├── app-prediction-history.png
+│   ├── app-dataset.png
+│   └── app-model-performance.png
+├── app.py
 ├── requirements.txt
-
 ├── README.md
-
 └── .gitignore
-
 ```
 
+## Run Locally
 
+**Requirements:** Python 3.11 or newer.
 
-\## Run locally
-
-Python 3.11 or newer is required.
-
-
+### 1. Clone the repository
 
 ```bash
-
 git clone https://github.com/naimasiddiqui10/salary-prediction-app.git
-
 cd salary-prediction-app
-
-
-
-python -m venv venv
-
-\# Windows:      venv\\Scripts\\activate
-
-\# macOS/Linux:  source venv/bin/activate
-
-
-
-pip install -r requirements.txt
-
-streamlit run app.py
-
 ```
 
+### 2. Create and activate a virtual environment
 
+**Windows:**
 
-To retrain the model: `pip install notebook`, open `notebooks/model\_training.ipynb` and run all cells. This rewrites `model/model.pkl` and `model/metrics.json`.
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
+**macOS/Linux:**
 
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-\## Tech stack
+### 3. Install dependencies
 
-Python, pandas, NumPy, scikit-learn, joblib, Streamlit, Altair, Matplotlib, Seaborn.
+```bash
+pip install -r requirements.txt
+```
 
+### 4. Launch the application
+
+```bash
+streamlit run app.py
+```
+
+The application will open in your browser.
+
+## Retrain the Model
+
+To retrain the model, install Jupyter Notebook if it is not already installed:
+
+```bash
+pip install notebook
+```
+
+Open `notebooks/model_training.ipynb` and run all cells. This updates `model/model.pkl` and `model/metrics.json`.
+
+## Tech Stack
+
+- **Language:** Python
+- **Data processing:** pandas, NumPy
+- **Machine learning:** scikit-learn
+- **Model serialization:** joblib
+- **Web application:** Streamlit
+- **Visualization:** Altair, Matplotlib, Seaborn
